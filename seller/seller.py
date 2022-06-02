@@ -13,7 +13,7 @@ itemList = []
 earn = 0
 
 try:
-    udp.sendto("isOpen".encode(), dest)
+    udp.sendto("isOpen-vendedor".encode(), dest)
     msg, cliente = udp.recvfrom(1024)
 except:
     print("O leilão está fechado! Volte mais tarde!!")
@@ -26,27 +26,34 @@ while msg != 'sair':
     print("1. Listar meus artigos")
     print("2. Adicionar artigo")
     print("3. Remover artigo")
-    print("4. Ganhos")
-    print("sair")
+    print("digite 'sair' para sair")
     msg = input()
     if msg == "1":
         udp.sendto("list".encode(), dest)
-        msg, cliente = udp.recvfrom(1024)
+        resp, cliente = udp.recvfrom(1024)
+        print(resp.decode())
+        ## botar tratamento p caso nchegue a msg
+    
     elif msg == "2":
         print("Digite o nome do artigo: ", end="")
         nome = input()
         print("Digite o preço do artigo: ", end="")
         preco = int(input())
         udp.sendto(f'add,{nome},{preco}'.encode(), dest)
-        msg, cliente = udp.recvfrom(1024)
+        resp, cliente = udp.recvfrom(1024)
+        print(resp)
+        ## botar tratamento p caso nchegue a msg
+
     elif msg == "3":
         print("Digite o id do artigo: ", end="")
         idx = int(input())
         udp.sendto(f'remove,{idx}'.encode(), dest)
-        msg, cliente = udp.recvfrom(1024)
-    elif msg == "4":
-        udp.sendto(f'ganhos'.encode(), dest)
-        msg, cliente = udp.recvfrom(1024)
+        resp, cliente = udp.recvfrom(1024)
+        print(resp)
+        ## botar tratamento p caso nchegue a msg
+    # elif msg == "4": # todo
+    #     udp.sendto(f'ganhos'.encode(), dest)
+    #     msg, cliente = udp.recvfrom(1024)
     elif msg == "sair":
         udp.sendto(f'sair'.encode(), dest)
         break
@@ -54,5 +61,5 @@ while msg != 'sair':
         print("Não entendi!")
 
 
-    udp.sendto(msg.encode(), dest)
+    
 udp.close()
